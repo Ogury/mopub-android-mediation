@@ -10,6 +10,7 @@ import java.util.Map;
 public class OguryConfigurationParser {
 
     private static final String AD_UNIT_ID_KEY = "ad_unit_id";
+    private static final String ASSET_KEY_KEY = "asset_key";
 
     @Nullable
     public static String getAdUnitId(Map<String, String> adDataExtras) {
@@ -17,6 +18,18 @@ public class OguryConfigurationParser {
             return adDataExtras.get(AD_UNIT_ID_KEY);
         }
         return null;
+    }
+
+    @Nullable
+    public static String getAssetKey(Map<String, String> adDataExtras) {
+        if (adDataExtras != null && !adDataExtras.isEmpty()) {
+            return adDataExtras.get(ASSET_KEY_KEY);
+        }
+        return null;
+    }
+
+    public static boolean isAssetKeyValid(@Nullable String assetKey) {
+        return assetKey != null && !TextUtils.isEmpty(assetKey);
     }
 
     public static boolean isAdUnitIdValid(@Nullable String adUnitId) {

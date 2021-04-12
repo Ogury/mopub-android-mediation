@@ -60,6 +60,8 @@ public class OguryRewardedVideo extends BaseAd implements OguryOptinVideoAdListe
 
         setAutomaticImpressionAndClickTracking(false);
 
+        OguryInitializer.startOgurySDKIfNecessary(context, adData.getExtras());
+
         mAdUnitId = OguryConfigurationParser.getAdUnitId(adData.getExtras());
         if (!OguryConfigurationParser.isAdUnitIdValid(mAdUnitId)) {
             if (mLoadListener != null) {
@@ -74,6 +76,7 @@ public class OguryRewardedVideo extends BaseAd implements OguryOptinVideoAdListe
         mListenerHelper = new OguryAdListenerHelper(ADAPTER_NAME, mAdUnitId);
 
         mListenerHelper.setLoadListener(mLoadListener);
+        mOptinVideo.setListener(this);
         mOptinVideo.load();
 
         MoPubLog.log(getAdNetworkId(), LOAD_ATTEMPTED, ADAPTER_NAME);

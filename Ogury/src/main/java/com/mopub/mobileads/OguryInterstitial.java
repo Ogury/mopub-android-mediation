@@ -7,21 +7,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.mopub.common.LifecycleListener;
-import com.mopub.common.MoPub;
 import com.mopub.common.Preconditions;
 import com.mopub.common.logging.MoPubLog;
 import com.ogury.core.OguryError;
-import com.ogury.ed.OguryBannerAdSize;
 import com.ogury.ed.OguryInterstitialAd;
 import com.ogury.ed.OguryInterstitialAdListener;
 
-import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.CLICKED;
 import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.LOAD_ATTEMPTED;
 import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.LOAD_FAILED;
-import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.LOAD_SUCCESS;
 import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.SHOW_ATTEMPTED;
 import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.SHOW_FAILED;
-import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.SHOW_SUCCESS;
 
 public class OguryInterstitial extends BaseAd implements OguryInterstitialAdListener {
 
@@ -62,6 +57,8 @@ public class OguryInterstitial extends BaseAd implements OguryInterstitialAdList
 
         setAutomaticImpressionAndClickTracking(false);
 
+        OguryInitializer.startOgurySDKIfNecessary(context, adData.getExtras());
+
         mAdUnitId = OguryConfigurationParser.getAdUnitId(adData.getExtras());
         if (!OguryConfigurationParser.isAdUnitIdValid(mAdUnitId)) {
             if (mLoadListener != null) {
@@ -76,6 +73,7 @@ public class OguryInterstitial extends BaseAd implements OguryInterstitialAdList
         mListenerHelper = new OguryAdListenerHelper(ADAPTER_NAME, mAdUnitId);
 
         mListenerHelper.setLoadListener(mLoadListener);
+        mInterstitial.setListener(this);
         mInterstitial.load();
 
         MoPubLog.log(getAdNetworkId(), LOAD_ATTEMPTED, ADAPTER_NAME);

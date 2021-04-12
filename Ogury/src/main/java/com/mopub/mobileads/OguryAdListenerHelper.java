@@ -7,6 +7,7 @@ import com.ogury.core.OguryError;
 import com.ogury.ed.OguryAdFormatErrorCode;
 
 import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.CLICKED;
+import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.CUSTOM;
 import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.LOAD_FAILED;
 import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.LOAD_SUCCESS;
 import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.SHOW_FAILED;
@@ -41,6 +42,8 @@ public class OguryAdListenerHelper {
     }
 
     public void onAdError(OguryError error) {
+        MoPubLog.log(mAdUnitId, CUSTOM, mAdapterName, "Ad failed to show/load with error code " + error.getErrorCode());
+
         MoPubErrorCode errorCode = getMoPubErrorCodeForError(error);
         if (mInteractionListener != null) {
             MoPubLog.log(mAdUnitId, SHOW_FAILED, mAdapterName, errorCode.getIntCode(), errorCode);

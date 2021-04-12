@@ -29,10 +29,10 @@ public class OguryConfigurationParser {
     }
 
     public static boolean isAssetKeyValid(@Nullable String assetKey) {
-        return assetKey != null && !TextUtils.isEmpty(assetKey);
+        return !TextUtils.isEmpty(assetKey);
     }
 
     public static boolean isAdUnitIdValid(@Nullable String adUnitId) {
-        return adUnitId != null && !TextUtils.isEmpty(adUnitId);
+        return !TextUtils.isEmpty(adUnitId);
     }
 }

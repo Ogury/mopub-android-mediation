@@ -25,7 +25,7 @@ public class OguryInitializer {
     private static final String MONITORING_KEY_MODULE_VERSION = "mopub_ce_version";
     private static final String MONITORING_KEY_MOPUB_VERSION = "mopub_mediation_version";
 
-    private static final String CHOICE_MANAGER_CONSENT_ORIGIN = "MoPub";
+    private static final String CHOICE_MANAGER_CONSENT_ORIGIN = "MOPUB";
 
     private static boolean sInitialized = false;
 
@@ -66,7 +66,7 @@ public class OguryInitializer {
         PersonalInfoManager personalInfoManager = MoPub.getPersonalInformationManager();
         if (personalInfoManager != null && personalInfoManager.gdprApplies()) {
             OguryChoiceManagerExternal.setConsent(
-                    personalInfoManager.getPersonalInfoConsentStatus() == ConsentStatus.EXPLICIT_YES,
+                    personalInfoManager.canCollectPersonalInformation(),
                     CHOICE_MANAGER_CONSENT_ORIGIN
             );
         }

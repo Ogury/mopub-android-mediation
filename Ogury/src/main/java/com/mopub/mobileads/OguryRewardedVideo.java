@@ -61,6 +61,7 @@ public class OguryRewardedVideo extends BaseAd implements OguryOptinVideoAdListe
         setAutomaticImpressionAndClickTracking(false);
 
         OguryInitializer.startOgurySDKIfNecessary(context, adData.getExtras());
+        OguryInitializer.updateConsent();
 
         mAdUnitId = OguryConfigurationParser.getAdUnitId(adData.getExtras());
         if (!OguryConfigurationParser.isAdUnitIdValid(mAdUnitId)) {

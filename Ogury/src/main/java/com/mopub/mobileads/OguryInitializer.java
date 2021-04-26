@@ -8,7 +8,9 @@ import androidx.annotation.Nullable;
 import com.mopub.common.MoPub;
 import com.mopub.common.Preconditions;
 import com.mopub.common.logging.MoPubLog;
-import com.mopub.mobileads.ogury.BuildConfig;
+import com.mopub.common.privacy.ConsentStatus;
+import com.mopub.common.privacy.PersonalInfoManager;
+import com.ogury.cm.OguryChoiceManagerExternal;
 import com.ogury.sdk.Ogury;
 import com.ogury.sdk.OguryConfiguration;
 
@@ -22,6 +24,8 @@ public class OguryInitializer {
     // Monitoring constants
     private static final String MONITORING_KEY_MODULE_VERSION = "mopub_ce_version";
     private static final String MONITORING_KEY_MOPUB_VERSION = "mopub_mediation_version";
+
+    private static final String CHOICE_MANAGER_CONSENT_ORIGIN = "MoPub";
 
     private static boolean sInitialized = false;
 
@@ -55,9 +59,23 @@ public class OguryInitializer {
         startOgurySDK(context, assetKey);
     }
 
+    public static void updateConsent() {
+        if (!sInitialized) {
+            return;
+        }
+        PersonalInfoManager personalInfoManager = MoPub.getPersonalInformationManager();
+        if (personalInfoManager != null && personalInfoManager.gdprApplies()) {
+            OguryChoiceManagerExternal.setConsent(
+                    personalInfoManager.getPersonalInfoConsentStatus() == ConsentStatus.EXPLICIT_YES,
+                    CHOICE_MANAGER_CONSENT_ORIGIN
+            );
+        }
+    }
+
+
     /**
      * Retrieve MoPub version using reflection to know the exact version available in the application.
-     *
+     * <p>
      * Using the constant instead will make the compiler replace the value in the produced binary.
      * By using reflection, we are able to obtain the version integrated by the final user.
      *

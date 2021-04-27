@@ -66,7 +66,7 @@ public class OguryInitializer {
         PersonalInfoManager personalInfoManager = MoPub.getPersonalInformationManager();
         if (personalInfoManager != null && personalInfoManager.gdprApplies()) {
             OguryChoiceManagerExternal.setConsent(
-                    personalInfoManager.canCollectPersonalInformation(),
+                    MoPub.canCollectPersonalInformation(),
                     CHOICE_MANAGER_CONSENT_ORIGIN
             );
         }

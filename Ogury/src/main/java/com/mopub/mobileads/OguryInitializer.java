@@ -64,11 +64,14 @@ public class OguryInitializer {
             return;
         }
         PersonalInfoManager personalInfoManager = MoPub.getPersonalInformationManager();
-        if (personalInfoManager != null && personalInfoManager.gdprApplies()) {
-            OguryChoiceManagerExternal.setConsent(
-                    MoPub.canCollectPersonalInformation(),
-                    CHOICE_MANAGER_CONSENT_ORIGIN
-            );
+        if (personalInfoManager != null) {
+            Boolean gdprApplies = personalInfoManager.gdprApplies();
+            if (gdprApplies != null && gdprApplies) {
+                OguryChoiceManagerExternal.setConsent(
+                        MoPub.canCollectPersonalInformation(),
+                        CHOICE_MANAGER_CONSENT_ORIGIN
+                );
+            }
         }
     }
 

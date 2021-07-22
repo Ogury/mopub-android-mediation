@@ -121,8 +121,10 @@ public class OguryRewardedVideo extends BaseAd implements OguryOptinVideoAdListe
 
     @Override
     protected void onInvalidate() {
-        mListenerHelper = null;
         mOptInVideo = null;
+
+        mListenerHelper.setInteractionListener(null);
+        mListenerHelper.setLoadListener(null);
     }
 
     @Override

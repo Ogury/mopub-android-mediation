@@ -119,9 +119,6 @@ public class OguryInterstitial extends BaseAd implements OguryInterstitialAdList
     @Override
     protected void onInvalidate() {
         mInterstitial = null;
-
-        mListenerHelper.setLoadListener(null);
-        mListenerHelper.setInteractionListener(null);
     }
 
     @Override

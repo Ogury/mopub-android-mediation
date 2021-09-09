@@ -8,6 +8,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.mopub.common.DataKeys;
 import com.mopub.common.LifecycleListener;
 import com.mopub.common.MoPub;
 import com.mopub.common.Preconditions;
@@ -110,6 +111,11 @@ public class OguryBanner extends BaseAd implements OguryBannerAdListener, OguryA
 
         mBanner.setListener(this);
         mBanner.setAdImpressionListener(this);
+
+        final String adMarkup = extras.get(DataKeys.ADM_KEY);
+        if (!TextUtils.isEmpty(adMarkup)) {
+            mBanner.setMarkup(adMarkup);
+        }
         mBanner.loadAd();
 
         MoPubLog.log(getAdNetworkId(), LOAD_ATTEMPTED, ADAPTER_NAME);

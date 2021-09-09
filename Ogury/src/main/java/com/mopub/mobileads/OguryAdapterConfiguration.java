@@ -16,6 +16,8 @@ import com.ogury.sdk.Ogury;
 import com.ogury.sdk.OguryConfiguration;
 
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.CUSTOM;
 import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.CUSTOM_WITH_THROWABLE;
@@ -34,6 +36,9 @@ public class OguryAdapterConfiguration extends BaseAdapterConfiguration {
     // Monitoring constants
     private static final String MODULE_VERSION_KEY = "mopub_ce_version";
     private static final String MOPUB_VERSION_KEY = "mopub_mediation_version";
+
+    private final AtomicReference<String> tokenReference = new AtomicReference<>(null);
+    private final AtomicBoolean isComputingToken = new AtomicBoolean(false);
 
     private static boolean sInitialized = false;
 
@@ -65,12 +70,18 @@ public class OguryAdapterConfiguration extends BaseAdapterConfiguration {
     @Nullable
     @Override
     public String getBiddingToken(@NonNull Context context) {
-        return null;
+        Preconditions.checkNotNull(context);
+
+        refreshBidderToken(context);
+
+        return tokenReference.get();
     }
 
     @Override
-    public void initializeNetwork(@NonNull Context context, @Nullable Map<String, String> configuration,
-                                  @NonNull OnNetworkInitializationFinishedListener listener) {
+    public void initializeNetwork(@NonNull final Context context,
+                                  @Nullable final Map<String, String> configuration,
+                                  @NonNull final OnNetworkInitializationFinishedListener listener) {
+
         Preconditions.checkNotNull(context);
         Preconditions.checkNotNull(listener);
 
@@ -161,5 +172,20 @@ public class OguryAdapterConfiguration extends BaseAdapterConfiguration {
 
     public static boolean initialized() {
         return sInitialized;
+    }
+
+    private void refreshBidderToken(final Context context) {
+        if (isComputingToken.compareAndSet(false, true)) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    final String token = OguryTokenProvider.getBidderToken();
+                    if (token != null) {
+                        tokenReference.set(token);
+                    }
+                    isComputingToken.set(false);
+                }
+            }).start();
+        }
     }
 }

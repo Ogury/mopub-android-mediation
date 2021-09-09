@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.mopub.common.DataKeys;
 import com.mopub.common.LifecycleListener;
 import com.mopub.common.MoPub;
 import com.mopub.common.MoPubReward;
@@ -106,6 +107,11 @@ public class OguryRewardedVideo extends BaseAd implements OguryOptinVideoAdListe
         mOptInVideo = new OguryOptinVideoAd(context, mAdUnitId);
         mOptInVideo.setListener(this);
         mOptInVideo.setAdImpressionListener(this);
+
+        final String adMarkup = extras.get(DataKeys.ADM_KEY);
+        if (!TextUtils.isEmpty(adMarkup)) {
+            mOptInVideo.setMarkup(adMarkup);
+        }
         mOptInVideo.load();
 
         MoPubLog.log(getAdNetworkId(), LOAD_ATTEMPTED, ADAPTER_NAME);

@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.mopub.common.DataKeys;
 import com.mopub.common.LifecycleListener;
 import com.mopub.common.MoPub;
 import com.mopub.common.Preconditions;
@@ -97,12 +98,19 @@ public class OguryInterstitial extends BaseAd implements OguryInterstitialAdList
 
         mOguryAdapterConfiguration.setCachedInitializationParameters(context, extras);
 
+
         mListenerHelper = new OguryAdListenerHelper(ADAPTER_NAME, mAdUnitId);
         mListenerHelper.setLoadListener(mLoadListener);
 
         mInterstitial = new OguryInterstitialAd(context, mAdUnitId);
         mInterstitial.setListener(this);
         mInterstitial.setAdImpressionListener(this);
+
+        final String adMarkup = extras.get(DataKeys.ADM_KEY);
+        if (!TextUtils.isEmpty(adMarkup)) {
+            mInterstitial.setMarkup(adMarkup);
+        }
+
         mInterstitial.load();
 
         MoPubLog.log(getAdNetworkId(), LOAD_ATTEMPTED, ADAPTER_NAME);
